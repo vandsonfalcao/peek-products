@@ -1,0 +1,21 @@
+{
+  "name": "peek-products",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/server.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "node --env-file=.env --import ./ts-loader.js --watch --no-warnings ./src/server.ts",
+    "test": "node --env-file=.env --import ./ts-loader.js --test  ./test/*",
+    "test:coverage": "node --env-file=.env --import ./ts-loader.js --experimental-test-coverage --test  ./test/*",
+    "test:debug": "node --env-file=.env --import ./ts-loader.js --no-warnings --inspect --watch --test ./test/*"
+  },
+  "keywords": [],
+  "author": "Vandson Falcão",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.11.20",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
