@@ -1,4 +1,4 @@
-import axios from "axios";
+import puppeteer, { Browser } from "puppeteer";
 import cheerio from "cheerio";
 import { inspect } from "util";
 
@@ -7,52 +7,65 @@ interface ProductDetails {
 	price: string;
 }
 async function getProductDetails(url: string): Promise<ProductDetails | null> {
+	let browser: Browser | null = null;
 	try {
-		const { data } = await axios.get(url);
-		const $ = cheerio.load(data);
+		browser = await puppeteer.launch();
+		if (!browser) throw new Error("Cant launch a browser");
+
+		const page = await browser.newPage();
+		await page.goto(url, { waitUntil: "networkidle2" });
+		const pageContent = await page.content();
+		const $ = cheerio.load(pageContent);
 
 		const productName: string | null = (() => {
+			// faze um metodo para cada site e ter um default
+			const metaElements = $('[property="og:title"]')
+				.map((_, el) => $(el).attr('content')?.trim() ?? '')
+				.get()
+				.filter((string) => !!string);
 			const h1Elements = $("h1")
 				.map((_, el) => $(el).text().trim())
 				.get()
 				.filter((string) => !!string);
+			const primaryArray = [...metaElements, ...h1Elements];
+
 			const idProductElements = $('[id*="product"]')
 				.map((_, el) => $(el).text().trim())
 				.get()
 				.filter((string) => !!string);
 			const idTitleProductElements = $('[id*="title"]')
-				.map((_, el) => $(el).text().trim())
-				.get()
-				.filter((string) => !!string);
+			.map((_, el) => $(el).text().trim())
+			.get()
+			.filter((string) => !!string);
 			const classProductElements = $('[class*="product"]')
-				.map((_, el) => $(el).text().trim())
-				.get()
-				.filter((string) => !!string);
+			.map((_, el) => $(el).text().trim())
+			.get()
+			.filter((string) => !!string);
 			const classTitleProductElements = $('[class*="title"]')
-				.map((_, el) => $(el).text().trim())
-				.get()
-				.filter((string) => !!string);
+			.map((_, el) => $(el).text().trim())
+			.get()
+			.filter((string) => !!string);
+			const secondaryArray = [
+				...idProductElements,
+				...idTitleProductElements,
+				...classProductElements,
+				...classTitleProductElements,
+			];
 
-			const bigArray = h1Elements.length
-				? h1Elements
-				: [
-						...idProductElements,
-						...idTitleProductElements,
-						...classProductElements,
-						...classTitleProductElements,
-				  ];
-			if (!bigArray.length) return null;
+			// const usedArray = primaryArray.length ? primaryArray : secondaryArray;
+			const usedArray = [...primaryArray, ...secondaryArray];
+			if (!usedArray.length) return null;
 
 			let winner = null;
 			let occurrenceCounter = -1;
 
-			for (let i = 0; i < bigArray.length; i++) {
+			for (let i = 0; i < usedArray.length; i++) {
 				let occurrences = 1;
-				for (let t = i + 1; t < bigArray.length; t++)
-					if (bigArray[i] == bigArray[t]) occurrences++;
+				for (let t = i + 1; t < usedArray.length; t++)
+					if (usedArray[i] == usedArray[t]) occurrences++;
 
 				if (occurrences > occurrenceCounter) {
-					winner = bigArray[i];
+					winner = usedArray[i];
 					occurrenceCounter = occurrences;
 				}
 			}
@@ -91,6 +104,8 @@ async function getProductDetails(url: string): Promise<ProductDetails | null> {
 			error: inspect(error, { depth: 10 }),
 		});
 		return null;
+	} finally {
+		if (browser) await browser.close();
 	}
 }
 
