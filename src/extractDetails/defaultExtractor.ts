@@ -36,7 +36,6 @@ export const defaultExtractor: Extractor = ($) => {
 			...classTitleProductElements,
 		];
 
-		// const usedArray = primaryArray.length ? primaryArray : secondaryArray;
 		const usedArray = [...primaryArray, ...secondaryArray];
 		if (!usedArray.length) return null;
 

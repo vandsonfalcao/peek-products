@@ -36,7 +36,7 @@ const getProductDetails: GetProductDetailsFunc = async (url, domain = undefined)
 
 const response = await getProductDetails(`
 
-https://pt.aliexpress.com/item/1005004685937716.html?pdp_npi=4%40dis%21USD%21US%20%2463.33%21US%20%2436.73%21%21%2163.33%2136.73%21%402103080817098383227422216eeb97%2112000030127057220%21sh%21BR%21180738135%21&spm=a2g0o.store_pc_allItems_or_groupList.new_all_items_2007539327050.1005004685937716&aff_fcid=63e9cbfdc08440189cdfc82176db9880-1716057861608-05930-_Dl6LAN7&tt=CPS_NORMAL&aff_fsk=_Dl6LAN7&aff_platform=portals-tool&sk=_Dl6LAN7&aff_trace_key=63e9cbfdc08440189cdfc82176db9880-1716057861608-05930-_Dl6LAN7&terminal_id=5c867179f201423d83e49d0dd3fdf652&afSmartRedirect=y&gatewayAdapt=glo2bra
+https://www.guldi.com.br/produto/colchao-guldi/?attribute_1-tamanho-do-colchao=Queen+-+158+x+198+x+25+cm&attribute_2-modelo=Macio+D30
 
-`, `aliexpress`);
+`, 'guldi');
 console.log(response);

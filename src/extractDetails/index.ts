@@ -2,6 +2,7 @@ import { ProductDetailsNullable } from "../types";
 import { aliexpressExtractor } from "./aliexpressExtractor";
 import { amazonExtractor } from "./amazonExtractor";
 import { defaultExtractor } from "./defaultExtractor";
+import { guldiExtractor } from "./guldiExtractor";
 import { extractDetailsFunc } from "./interfaces";
 
 export const extractDetails: extractDetailsFunc = ($, domain = undefined) => {
@@ -12,6 +13,9 @@ export const extractDetails: extractDetailsFunc = ($, domain = undefined) => {
 			break;
 		case "amazon":
 			productDetailsNullable = amazonExtractor($);
+			break;
+		case "guldi":
+			productDetailsNullable = guldiExtractor($);
 			break;
 
 		default:
